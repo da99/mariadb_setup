@@ -7,7 +7,7 @@ sql () {
   local +x FILE="$1"; shift
 
   case "$DIR" in
-    BOTH|UP|DOWN)
+    UP|DOWN)
       :
       ;;
     *)
@@ -25,8 +25,9 @@ sql () {
   for LINE in $(cat "$FILE"); do
 
     local +x CLEAN_LINE="$(echo $LINE)"
-    local +x NEW_DIR="$(echo "$CLEAN_LINE" | grep -Po '^[\-\ ]+\K.+' | tr '[:lower:]' '[:upper:]')"
+    local +x NEW_DIR="$(echo "$CLEAN_LINE" | grep -Po '^[\-\ ]+\K(UP|DOWN|BOTH)(?=\ *)$' | tr '[:lower:]' '[:upper:]')"
 
+    set -x
     case "$NEW_DIR" in
       UP)
         CURRENT="UP"
