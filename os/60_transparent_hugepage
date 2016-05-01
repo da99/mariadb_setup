@@ -1,0 +1,11 @@
+#!/bin/sh
+cat <<EOF
+if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
+  cp -f /etc/grub.d/never /sys/kernel/mm/transparent_hugepage/enabled
+  cp -f /sys/kernel/mm/transparent_hugepage/enabled /etc/grub.d/e1
+fi
+if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
+  cp -f /etc/grub.d/never /sys/kernel/mm/transparent_hugepage/defrag
+  cp -f /sys/kernel/mm/transparent_hugepage/defrag /etc/grub.d/e2
+fi
+EOF

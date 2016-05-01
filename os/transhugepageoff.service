@@ -1,0 +1,9 @@
+[Unit]
+Description=Disable Transparent Hugepage
+
+[Service]
+Type=oneshot
+ExecStart=/etc/grub.d/disable_transparent_hugepage
+
+[Install]
+WantedBy=multi-user.target

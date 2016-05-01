@@ -1,0 +1,5 @@
+
+/etc/tmpfiles.d/local.conf
+
+w /sys/kernel/mm/transparent_hugepage/enabled - - - - never
+w /sys/kernel/mm/transparent_hugepage/defrag - - - - never
