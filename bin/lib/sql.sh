@@ -6,6 +6,16 @@ sql () {
   local +x DIR="$(echo $1 | tr '[:lower:]' '[:upper:]')";  shift
   local +x FILE="$1"; shift
 
+  if [[ ! -e "$FILE" ]]; then
+    mksh_setup RED "!!! File does not exist: {{$FILE}}"
+    exit 1
+  fi
+
+  if [[ ! -s "$FILE" ]]; then
+    mksh_setup RED "!!! File is empty: {{$FILE}}"
+    exit 1
+  fi
+
   case "$DIR" in
     UP|DOWN)
       :
@@ -27,7 +37,6 @@ sql () {
     local +x CLEAN_LINE="$(echo $LINE)"
     local +x NEW_DIR="$(echo "$CLEAN_LINE" | grep -Po '^[\-\ ]+\K(UP|DOWN|BOTH)(?=\ *)$' | tr '[:lower:]' '[:upper:]')"
 
-    set -x
     case "$NEW_DIR" in
       UP)
         CURRENT="UP"

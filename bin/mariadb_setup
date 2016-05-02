@@ -15,7 +15,7 @@ set -u -e -o pipefail
 
 case $action in
   help|--help)
-    mksh_setup print_help $0
+    mksh_setup print-help $0
     ;;
 
   *)
