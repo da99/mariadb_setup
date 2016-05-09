@@ -5,6 +5,7 @@ snapshot () {
   local +x DIR="$1"; shift
   mkdir -p "$DIR"
 
+  # === Procedures:
   local +x SQL="$(cat <<EOF
   SELECT SPECIFIC_NAME
     FROM INFORMATION_SCHEMA.ROUTINES
@@ -12,10 +13,11 @@ snapshot () {
   ;
 EOF)"
   echo "$SQL" | mysql --skip-column-names | while read PROC ; do
-    echo 'SHOW CREATE PROCEDURE `'$PROC'`;' | mysql > "$DIR/$PROC.procedure.sql"
+    echo "$(echo 'SHOW CREATE PROCEDURE `'$PROC'`;' | mysql)" > "$DIR/$PROC.procedure.sql"
     mksh_setup BOLD "=== Procedure: {{$PROC}}"
   done
 
+  # === Functions:
   local +x SQL="$(cat <<EOF
   SELECT SPECIFIC_NAME
     FROM INFORMATION_SCHEMA.ROUTINES
@@ -23,17 +25,29 @@ EOF)"
   ;
 EOF)"
   echo "$SQL" | mysql --skip-column-names | while read FUNC ; do
-    echo 'SHOW CREATE FUNCTION `'$FUNC'`;' | mysql > "$DIR/$FUNC.function.sql"
+    echo "$(echo 'SHOW CREATE FUNCTION `'$FUNC'`;' | mysql)" > "$DIR/$FUNC.function.sql"
     mksh_setup BOLD "=== Function: {{$FUNC}}"
   done
 
+  # === Tables:
   local +x SQL="$(cat <<EOF
   SELECT TABLE_NAME
     FROM INFORMATION_SCHEMA.TABLES
     WHERE TABLE_SCHEMA = database();
 EOF)"
   echo "$SQL" | mysql --skip-column-names | while read TBL ; do
-    echo 'SHOW CREATE TABLE `'$TBL'`;' | mysql > "$DIR/$TBL.table.sql"
+    echo "$(echo 'SHOW CREATE TABLE `'$TBL'`;' | mysql)" > "$DIR/$TBL.table.sql"
     mksh_setup BOLD "=== Table: {{$TBL}}"
+  done
+
+  # === Views:
+  local +x SQL="$(cat <<EOF
+  SELECT TABLE_NAME
+    FROM INFORMATION_SCHEMA.VIEWS
+    WHERE TABLE_SCHEMA = database();
+EOF)"
+  echo "$SQL" | mysql --skip-column-names | while read VIEW ; do
+    echo "$(echo 'SHOW CREATE VIEW `'$VIEW'`;' | mysql)" > "$DIR/$VIEW.view.sql"
+    mksh_setup BOLD "=== View: {{$VIEW}}"
   done
 } # === end function
