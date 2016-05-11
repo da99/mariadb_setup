@@ -22,14 +22,14 @@ case $action in
     func_file="$THIS_DIR/bin/lib/${action}.sh"
     if [[ -s "$func_file" ]]; then
       source "$func_file"
-      "$action" $@
+      "$action" "$@"
       exit 0
     fi
 
     # === Check progs/bin:
     if [[ -f "progs/bin/$action" ]]; then
       export PATH="$PWD/progs/bin:$PATH"
-      progs/bin/$action $@
+      progs/bin/$action "$@"
       exit 0
     fi
 
