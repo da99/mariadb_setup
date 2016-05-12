@@ -36,17 +36,8 @@ sql () {
     local +x NEW_DIR="$(echo "$CLEAN_LINE" | grep -Po '^[\-\ ]+\K(UP|DOWN|UP-IF|DOWN-IF)(?=\ *)$' | tr '[:lower:]' '[:upper:]')"
 
     case "$NEW_DIR" in
-      UP)
-        CURRENT="UP"
-        ;;
-      UP-IF)
-        CURRENT="UP-IF"
-        ;;
-      DOWN)
-        CURRENT="DOWN"
-        ;;
-      DOWN-IF)
-        CURRENT="DOWN-IF"
+      UP|UP-IF|DOWN|DOWN-IF)
+        CURRENT="$NEW_DIR"
         ;;
       *)
         if [[ "$CURRENT" == "$DIR" ]]; then
