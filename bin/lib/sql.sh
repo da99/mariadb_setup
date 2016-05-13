@@ -1,11 +1,32 @@
 
-# === {{CMD}}  UP       path/to/file.sql
-# === {{CMD}}  UP-IF    path/to/file.sql
-# === {{CMD}}  DOWN     path/to/file.sql
-# === {{CMD}}  DOWN-IF  path/to/file.sql
+standard-name () {
+  echo $1 | tr '[:lower:]' '[:upper:]'
+}
+
+# === {{CMD}}  UP           path/to/file.sql
+# === {{CMD}}  UP-IF        path/to/file.sql
+# === {{CMD}}  DOWN         path/to/file.sql
+# === {{CMD}}  DOWN-IF      path/to/file.sql
+# === {{CMD}}  TOP-COMMENT  path/to/file.sql
+# === {{CMD}}  MY-CUSTOM    OTHER-CUSTOM   ...   path/to/file.sql
 sql () {
-  local +x DIR="$(echo $1 | tr '[:lower:]' '[:upper:]')";  shift
-  local +x FILE="$1"; shift
+  local +x DIR="$(standard-name $1)";  shift
+  local +x TAGS="UP|UP-IF|DOWN|DOWN-IF|$DIR"
+  local +x FILE="";
+
+  while [[ ! -z "$@" ]]; do
+    if [[ -f "$1" ]]; then
+      FILE="$1"
+    else
+      TAGS="$TAGS|$(standard-name $1)"
+    fi
+    shift
+  done
+
+  if [[ -z "$FILE" ]]; then
+    mksh_setup RED "!!! File not specified: $THE_ARGS"
+    exit 1
+  fi
 
   if [[ ! -e "$FILE" ]]; then
     mksh_setup RED "!!! File does not exist: {{$FILE}}"
@@ -17,36 +38,25 @@ sql () {
     exit 1
   fi
 
-  case "$DIR" in
-    BOTH|UP|DOWN|"UP-IF"|"DOWN-IF"|OUTPUT)
-      :
-      ;;
-    *)
-      mksh_setup RED "!!! Invalid value: {{$DIR}}"
-      exit 1
-      ;;
-  esac
-
   local +x IFS=$'\n'
-  local +x CURRENT="UP"
 
-  for LINE in $(cat "$FILE"); do
+  # === IF TOP-COMMENT
+  local +x FOUND=""
+  if [[ "$DIR" == 'TOP-COMMENT' ]]; then
+    grep -Pzo "(?s)\A[\ \n]+\K(.+?)(?=\n[\ \n]{1,})" "$FILE"
+    return 0
+  fi # === IF TOP-COMMENT
 
-    local +x CLEAN_LINE="$(echo $LINE)"
-    local +x NEW_DIR="$(echo "$CLEAN_LINE" | grep -Po '^[\-\ ]+\K(UP|DOWN|UP-IF|DOWN-IF)(?=\ *)$' | tr '[:lower:]' '[:upper:]')"
-
-    case "$NEW_DIR" in
-      UP|UP-IF|DOWN|DOWN-IF)
-        CURRENT="$NEW_DIR"
-        ;;
-      *)
-        if [[ "$CURRENT" == "$DIR" ]]; then
-          echo "$LINE"
-        fi
-        ;;
-    esac
-  done
-
+  # === Match: -- $DIR ...
+  grep -Pzo "(?s)\n--\ *${DIR}\ *\n\K(.+?)(?=(--\ *(${TAGS})\ *\n|\Z))" "$FILE" || {
+    local +x STAT=$?
+    if [[ "$DIR" == "UP" ]]; then
+      grep -Pzo "(?s)\A[\ \n]*\K(.+?)(?=(--\ *(${TAGS})\ *\n|\Z))" "$FILE"
+      return 0
+    else
+      return $STAT
+    fi
+  }
 } # === end function
 
 specs () {
@@ -62,10 +72,11 @@ specs () {
     local +x CMD="$(cat "$SPEC" | mksh_setup first-line-after "-- +CMD")"
     echo -n "mariadb_setup sql ""$CMD"" "$SPEC" "
 
-    local +x EXPECT="$(cat "$SPEC" | mksh_setup first-line-after "-- +OUTPUT")"
+    local +x EXPECT="$(cat "$SPEC" | mksh_setup between-lines "--\ +OUTPUT" "--\ +END")"
     local +x ACTUAL="$(mariadb_setup sql """$CMD""" "$SPEC")"
     should-match "$(echo $EXPECT)" "$(echo $ACTUAL)"
   done
+
 } # === specs ()
 
 

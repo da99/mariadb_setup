@@ -5,7 +5,8 @@ is UP no header
 
 -- CMD
 UP
+-- END
 
 -- OUTPUT
 is UP no header
-
+-- END
