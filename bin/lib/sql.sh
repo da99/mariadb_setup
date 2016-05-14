@@ -40,8 +40,14 @@ sql () {
 
   local +x IFS=$'\n'
 
+  # === IF UNCOMMENT:
+  if [[ "$DIR" == 'UNCOMMENT' ]]; then
+    # grep -Pzo "(?s)-- \K(.+?)\n" "$FILE"
+    sed 's/^-- //'
+    return 0
+  fi # === IF UNCOMMENT
+
   # === IF TOP-COMMENT
-  local +x FOUND=""
   if [[ "$DIR" == 'TOP-COMMENT' ]]; then
     grep -Pzo "(?s)\A[\ \n]+\K(.+?)(?=\n[\ \n]{1,})" "$FILE"
     return 0
