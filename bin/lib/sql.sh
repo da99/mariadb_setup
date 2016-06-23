@@ -9,8 +9,17 @@ standard-name () {
 # === {{CMD}}  DOWN-IF      path/to/file.sql
 # === {{CMD}}  TOP-COMMENT  path/to/file.sql
 # === {{CMD}}  MY-CUSTOM    OTHER-CUSTOM   ...   path/to/file.sql
+# ===
+# === echo "...."  |  {{CMD}}  UNCOMMENT
+# ===                 {{CMD}}  UNCOMMENT  path/to/file.sql
 sql () {
   local +x DIR="$(standard-name $1)";  shift
+  # === IF UNCOMMENT:
+  if [[ "$DIR" == 'UNCOMMENT' ]]; then
+    sed 's/^-- //'
+    return 0
+  fi # === IF UNCOMMENT
+
   local +x TAGS="UP|UP-IF|DOWN|DOWN-IF|$DIR"
   local +x FILE="";
 
@@ -40,12 +49,6 @@ sql () {
 
   local +x IFS=$'\n'
 
-  # === IF UNCOMMENT:
-  if [[ "$DIR" == 'UNCOMMENT' ]]; then
-    # grep -Pzo "(?s)-- \K(.+?)\n" "$FILE"
-    sed 's/^-- //'
-    return 0
-  fi # === IF UNCOMMENT
 
   # === IF TOP-COMMENT
   if [[ "$DIR" == 'TOP-COMMENT' ]]; then
