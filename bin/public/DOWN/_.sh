@@ -1,8 +1,8 @@
 
-source "$THIS_DIR"/bin/lib/describe.sh
-source "$THIS_DIR"/bin/lib/has-versions-table.sh
-source "$THIS_DIR"/bin/lib/underscore-sql-files.sh
-source "$THIS_DIR"/bin/lib/regular-sql-files.sh
+source "$THIS_DIR"/bin/public/describe/_.sh
+source "$THIS_DIR"/bin/public/has-versions-table/_.sh
+source "$THIS_DIR"/bin/public/underscore-sql-files/_.sh
+source "$THIS_DIR"/bin/public/regular-sql-files/_.sh
 
 # === {{CMD}}  NAME   pat/to/dir/of/sql/files/
 DOWN () {

@@ -1,5 +1,5 @@
 
-source "$THIS_DIR"/bin/lib/versions-table-name.sh
+source "$THIS_DIR"/bin/public/versions-table-name/_.sh
 
 # === {{CMD}}
 # === Exits with 0 if table exists, non-zero otherwise.

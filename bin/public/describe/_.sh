@@ -1,5 +1,5 @@
 
-source "$THIS_DIR"/bin/lib/has-versions-table.sh
+source "$THIS_DIR"/bin/public/has-versions-table/_.sh
 
 # === {{CMD}}  Name
 describe () {

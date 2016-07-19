@@ -1,8 +1,8 @@
 
-source $THIS_DIR/bin/lib/create-versions-table.sh
-source $THIS_DIR/bin/lib/regular-sql-files.sh
-source $THIS_DIR/bin/lib/underscore-sql-files.sh
-source $THIS_DIR/bin/lib/describe.sh
+source $THIS_DIR/bin/public/create-versions-table/_.sh
+source $THIS_DIR/bin/public/regular-sql-files/_.sh
+source $THIS_DIR/bin/public/underscore-sql-files/_.sh
+source $THIS_DIR/bin/public/describe/_.sh
 
 # === {{CMD}}  NAME  dir/of/sql/files
 # === Uses SCHEME_TABLE_NAME="_migrate_versions"
