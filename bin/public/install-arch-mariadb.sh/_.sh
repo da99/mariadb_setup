@@ -10,5 +10,5 @@ install-arch-mariadb.sh () {
     sudo mysql_secure_installation
     return 0
   fi
-  mksh_setup ORANGE "=== Already {{installed}}: mysql/mariadb"
+  sh_color ORANGE "=== Already {{installed}}: mysql/mariadb"
 } # === end function

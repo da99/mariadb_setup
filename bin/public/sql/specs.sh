@@ -3,7 +3,7 @@ DIR="$THIS_DIR/bin/lib/sql"
 SPECS="$(find "$DIR" -mindepth 1 -maxdepth 1 -type f | sort -V)"
 
 if [[ -z "$SPECS" ]]; then
-  mksh_setup RED "!!! No specs found in $DIR"
+  sh_color RED "!!! No specs found in $DIR"
   exit 1
 fi
 

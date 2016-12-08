@@ -20,7 +20,7 @@ UP () {
   local +x IFS=$'\n'
   # === Files that always are run (eg stored procedures):
   for FILE in $(underscore-sql-files "$DIR") ; do
-    mksh_setup BOLD "=== Running: {{$FILE}}"
+    sh_color BOLD "=== Running: {{$FILE}}"
     $0 sql UP "$FILE" | mysql || {
       local +x stat="$?"
       # cat "$FILE"
@@ -41,7 +41,7 @@ EOF)"
   rm -f "$PATTERNS"
 
   if [[ -z "$REG_SQL_FILE_NAMES" ]]; then
-    mksh_setup BOLD "=== {{Up-to-date}}: $NAME" >&2
+    sh_color BOLD "=== {{Up-to-date}}: $NAME" >&2
     return 0
   fi
 
@@ -56,7 +56,7 @@ EOF)"
       INSERT INTO $VERSIONS_TABLE_NAME (name, file_name)
       VALUES ( "$NAME" , "$BASENAME");
 EOF)"
-    mksh_setup BOLD "=== Running: {{$FILE}}"
+    sh_color BOLD "=== Running: {{$FILE}}"
     echo "$SQL" | mysql
   done
 

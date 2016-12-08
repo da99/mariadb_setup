@@ -33,17 +33,17 @@ sql () {
   done
 
   if [[ -z "$FILE" ]]; then
-    mksh_setup RED "!!! File not specified: $THE_ARGS"
+    sh_color RED "!!! File not specified: $THE_ARGS"
     exit 1
   fi
 
   if [[ ! -e "$FILE" ]]; then
-    mksh_setup RED "!!! File does not exist: {{$FILE}}"
+    sh_color RED "!!! File does not exist: {{$FILE}}"
     exit 1
   fi
 
   if [[ ! -s "$FILE" ]]; then
-    mksh_setup RED "!!! File is empty: {{$FILE}}"
+    sh_color RED "!!! File is empty: {{$FILE}}"
     exit 1
   fi
 

@@ -12,6 +12,6 @@ create-versions-table () {
   local SQL="$(cat "$THIS_DIR"/create-versions.sql)"
   SQL="${SQL//"{{TABLE_NAME}}"/$VERSIONS_TABLE_NAME}"
 
-  mksh_setup BOLD "=== Creating table: {{$VERSIONS_TABLE_NAME}}"
+  sh_color BOLD "=== Creating table: {{$VERSIONS_TABLE_NAME}}"
   echo "$SQL" | mysql
 } # === end function
